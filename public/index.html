@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crateplay – Game Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f3fc;--panel:#fff;--ink:#1d1a33;--mute:#6a6585;--line:#ddd8ee;--acc:#3b5bff;--acc-ink:#fff;--free:#0b8a5c;--sale:#d93036;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14112a;--panel:#1e1a3c;--ink:#f1eefc;--mute:#a49fc4;--line:#322d5c;--acc:#8aa0ff;--acc-ink:#0f0c24;--free:#3ddba0;--sale:#ff7378}}
+:root[data-theme="dark"]{--bg:#14112a;--panel:#1e1a3c;--ink:#f1eefc;--mute:#a49fc4;--line:#322d5c;--acc:#8aa0ff;--acc-ink:#0f0c24;--free:#3ddba0;--sale:#ff7378}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "DM Sans",system-ui,sans-serif}
+h1,h2,h3,.logo{font-family:"Bricolage Grotesque","DM Sans",system-ui,sans-serif;margin:0;line-height:1.1}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:10px 20px}
+.logo{font-weight:800;font-size:1.5rem;letter-spacing:-.02em}
+nav{display:flex;gap:4px}
+nav button{background:none;border:0;padding:8px 14px;border-radius:8px;font-weight:500;color:var(--mute)}
+nav button[aria-current="page"]{background:var(--bg);color:var(--ink);font-weight:700}
+.search{flex:1;min-width:160px;max-width:380px;margin-left:auto}
+.search input{width:100%;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg)}
+.cartbtn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:999px;padding:9px 16px;font-weight:700}
+main{max-width:1180px;margin:0 auto;padding:24px 20px 60px}
+.hero{display:grid;grid-template-columns:1.4fr 1fr;border-radius:18px;overflow:hidden;background:var(--panel);border:1px solid var(--line);margin-bottom:32px}
+.hero .cover{min-height:300px;font-size:7rem}
+.hero .txt{padding:28px;display:flex;flex-direction:column;gap:12px;justify-content:center}
+.hero h1{font-size:2.4rem;font-weight:800}
+.hero p{margin:0;color:var(--mute);max-width:42ch}
+.cover{display:grid;place-items:center;font-size:4rem;position:relative;aspect-ratio:16/10}
+.hero .cover{aspect-ratio:auto}
+.badge{position:absolute;top:10px;left:10px;font-size:.8rem;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--sale);color:#fff}
+.badge.free{background:var(--free);color:#fff}
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:8px 0 14px;flex-wrap:wrap}
+.sec h2{font-size:1.5rem;font-weight:800}
+.sec p{margin:0;color:var(--mute);font-size:.95rem}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 14px;font-size:.92rem}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+select{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 10px;margin-left:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:1.1rem;font-weight:600}
+.meta{color:var(--mute);font-size:.88rem}
+.buy{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:8px}
+.price{font-weight:700}
+.price s{color:var(--mute);font-weight:400;font-size:.88rem;margin-right:4px}
+.price.free{color:var(--free)}
+.btn{margin-left:auto;background:var(--acc);color:var(--acc-ink);border:0;border-radius:8px;padding:7px 13px;font-weight:700;font-size:.9rem}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--mute)}
+.btn:disabled{opacity:.7;cursor:default}
+.empty{padding:40px;text-align:center;color:var(--mute);border:1px dashed var(--line);border-radius:12px}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(380px,100%);background:var(--panel);border-left:1px solid var(--line);z-index:30;transform:translateX(100%);visibility:hidden;transition:transform .2s;display:flex;flex-direction:column;padding:calc(18px + env(safe-area-inset-top,0px)) 18px calc(18px + env(safe-area-inset-bottom,0px))}
+aside.open{transform:none;visibility:visible}
+aside .items{flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.row{display:flex;gap:10px;align-items:center}
+.row .cover{width:64px;aspect-ratio:1;font-size:1.8rem;border-radius:8px;flex:none}
+.row .t{flex:1;min-width:0}
+.x{background:none;border:0;color:var(--mute);font-size:1.2rem}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:1.15rem;padding:12px 0}
+.note{font-size:.8rem;color:var(--mute);margin:8px 0 0}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:40}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.card{position:relative;transition:transform .15s}.card[data-act]{cursor:pointer}.card:hover{transform:translateY(-3px)}.hero[data-act]{cursor:pointer}.heart{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.5);color:#fff;font-size:1.1rem;line-height:1}.heart[aria-pressed='true']{color:#ff7a90}.sale{background:var(--ink);color:var(--bg);border-radius:10px;padding:8px 14px;margin-bottom:12px;font-size:.92rem}.prog{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}.prog i{display:block;height:100%;background:var(--acc)}#modal{position:fixed;inset:0;z-index:25;background:rgba(10,8,24,.6);display:none;align-items:center;justify-content:center;padding:16px}#modal.open{display:flex}.dlg{background:var(--panel);border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;position:relative}.dlg .cover{aspect-ratio:16/8;font-size:5rem}.mb{padding:18px 20px 22px;display:flex;flex-direction:column;gap:12px}.mx{position:absolute;top:10px;right:10px;z-index:3;background:rgba(0,0,0,.55);color:#fff;border-radius:50%;width:34px;height:34px}.stars button{background:none;border:0;font-size:1.6rem;color:var(--mute);padding:0 2px}.stars button.on{color:#f5b50a}.similar{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.pc{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:18px}.pc label{display:flex;gap:6px;align-items:center;color:var(--mute);font-size:.9rem}.pc select{margin-left:0}.fit{font-size:.8rem;font-weight:700;width:fit-content;padding:2px 8px;border-radius:6px}.fit.ok{background:rgba(11,138,92,.16);color:var(--free)}.fit.low{background:rgba(229,160,20,.28);color:var(--ink)}.fit.no{background:rgba(217,48,54,.15);color:var(--sale)}.dlg .buy .btn{margin-left:0}@media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero .cover{min-height:200px;font-size:5rem}.hero h1{font-size:1.9rem}.search{order:5;max-width:none;flex-basis:100%;margin-left:0}.cartbtn{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){aside,#toast{transition:none}}
+nav{flex-wrap:wrap}.pc input{padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}</style>
+</head>
+<body>
+<header>
+  <div class="logo">Crateplay</div>
+  <nav id="nav" aria-label="Sections"></nav>
+  <div class="search"><input id="q" type="search" placeholder="Search games" aria-label="Search games"></div>
+  <button class="cartbtn" id="cartbtn" aria-label="Open cart">Cart (<span id="cnt">0</span>)</button>
+</header>
+<main id="main"></main>
+<aside id="cart" aria-label="Cart">
+  <div class="row"><h2 style="flex:1">Your cart</h2><button class="x" data-act="close" aria-label="Close cart">✕</button></div>
+  <div class="items" id="items"></div>
+  <div class="total"><span>Total</span><span id="tot">Free</span></div>
+  <button class="btn" style="margin:0;width:100%;padding:11px" data-act="checkout" id="co">Check out</button>
+  <p class="note">This is a demo store. No real payment is taken.</p>
+</aside>
+<div id="modal"></div>
+<div id="toast" role="status"></div>
+<script>
+const G=[
+{id:1,t:"Elden Ring",g:"RPG",p:2799,o:3999,e:"🗡️",c:["#c9a227","#2b2118"],r:4.8,d:"Explore the vast Lands Between in FromSoftware’s open-world action RPG, co-written with George R. R. Martin."},
+{id:2,t:"Cyberpunk 2077",g:"RPG",p:1499,o:2999,e:"🌃",c:["#fcee0a","#ff2a6d"],r:4.4,d:"Open-world RPG set in Night City."},
+{id:3,t:"The Witcher 3: Wild Hunt",g:"RPG",p:649,o:1299,e:"🐺",c:["#8e9eab","#2c3e50"],r:4.9,d:"Hunt monsters as Geralt of Rivia."},
+{id:4,t:"Red Dead Redemption 2",g:"Action",p:1649,o:3299,e:"🤠",c:["#c0392b","#f39c12"],r:4.8,d:"Outlaw life in the fading Wild West."},
+{id:5,t:"Hades",g:"Indie",p:618,o:825,e:"🔱",c:["#e52d27","#3a0d1c"],r:4.9,d:"Fight out of the Underworld in this roguelike."},
+{id:6,t:"Hollow Knight",g:"Indie",p:490,o:490,e:"🦋",c:["#355c7d","#6c5b7b"],r:4.8,d:"Explore a ruined insect kingdom."},
+{id:7,t:"Stardew Valley",g:"Casual",p:420,o:420,e:"🌾",c:["#56ab2f","#f9d423"],r:4.9,d:"Inherit a farm and build a new life."},
+{id:8,t:"Celeste",g:"Indie",p:495,o:495,e:"🍓",c:["#ff9a9e","#a18cd1"],r:4.8,d:"Climb a mountain in a tough platformer."},
+{id:9,t:"Portal 2",g:"Puzzle",p:330,o:330,e:"🌀",c:["#f7971e","#00c6ff"],r:4.9,d:"Solve puzzles with a portal gun."},
+{id:10,t:"Dota 2",g:"Strategy",p:0,o:0,e:"🛡️",c:["#b21f1f","#1a2a6c"],r:4.2,d:"Five-vs-five MOBA with over 120 heroes."},
+{id:11,t:"Counter-Strike 2",g:"Shooter",p:0,o:0,e:"🔫",c:["#f2994a","#2d3436"],r:4.3,d:"Competitive tactical shooter."},
+{id:12,t:"Fortnite",g:"Shooter",p:0,o:0,e:"🪂",c:["#7f00ff","#00c6ff"],r:4.1,d:"Battle royale and creative modes."},
+{id:13,t:"Rocket League",g:"Sports",p:0,o:0,e:"⚽",c:["#0575e6","#f46b45"],r:4.5,d:"Soccer played with rocket-powered cars."},
+{id:14,t:"Apex Legends",g:"Shooter",p:0,o:0,e:"🎯",c:["#cb2d3e","#ef473a"],r:4.3,d:"Squad-based battle royale with hero abilities."},
+{id:15,t:"Warframe",g:"Action",p:0,o:0,e:"🥷",c:["#00b4db","#0f2027"],r:4.5,d:"Co-op space ninja action."},
+{id:16,t:"Genshin Impact",g:"RPG",p:0,o:0,e:"✨",c:["#89f7fe","#66a6ff"],r:4.2,d:"Open-world action RPG across Teyvat."},
+{id:17,t:"Fall Guys",g:"Casual",p:0,o:0,e:"🫘",c:["#ff9a9e","#fecfef"],r:4.3,d:"Chaotic party game of obstacle courses."},
+{id:18,t:"Forza Horizon 5",g:"Racing",p:2399,o:3999,e:"🏁",c:["#00d2ff","#ff512f"],r:4.7,d:"Race across a vibrant open-world Mexico."},
+{id:19,t:"Sid Meier’s Civilization VI",g:"Strategy",p:749,o:2999,e:"🏛️",c:["#d4af37","#1e3c72"],r:4.5,d:"Build an empire to stand the test of time."},
+{id:20,t:"Terraria",g:"Indie",p:349,o:349,e:"⛏️",c:["#56ab2f","#614385"],r:4.9,d:"Dig, fight, explore and build in 2D."}];
+let S={tab:"store",genre:"All",sort:"featured",q:"",cart:[],lib:[10],wish:[],inst:{},my:{},modal:0,sale:false,pc:null,fit:false,mood:'',tok:null,name:null,groups:[]};
+try{const v=JSON.parse(localStorage.getItem("crateplay")||"null");if(v&&v.cart&&v.lib)S.cart=v.cart,S.lib=v.lib,S.wish=v.wish||[],S.pc=v.pc||null}catch(e){}
+const save=()=>{if(S.tok)api('/api/state','PUT',{cart:S.cart,lib:S.lib,wish:S.wish}).catch(()=>{});try{localStorage.setItem("crateplay",JSON.stringify({cart:S.cart,lib:S.lib,wish:S.wish,pc:S.pc}))}catch(e){}};
+const $=s=>document.querySelector(s),by=id=>G.find(x=>x.id==id);
+const money=n=>n?"₹"+n.toLocaleString("en-IN"):"Free";
+const cover=g=>`<div class="cover" style="background:${g.img?'url('+g.img+') center/cover,':''}linear-gradient(135deg,${g.c[0]},${g.c[1]})" aria-hidden="true">${g.img?'':g.e}${g.p===0?'<span class="badge free">Free</span>':g.o>g.p?`<span class="badge">−${Math.round(100-g.p/g.o*100)}%</span>`:""}</div>`;
+function btn(g){
+  if(S.lib.includes(g.id))return `<button class="btn ghost" disabled>In library</button>`;
+  if(S.cart.includes(g.id))return `<button class="btn ghost" data-act="open">In cart</button>`;
+  return `<button class="btn" data-act="add" data-id="${g.id}">${g.p?"Add to cart":"Get"}</button>`}
+const REQ={1:[12,2],2:[12,2],3:[8,1],4:[8,2],5:[4,0],6:[4,0],7:[2,0],8:[2,0],9:[4,0],10:[4,0],11:[8,1],12:[8,1],13:[4,1],14:[8,1],15:[4,0],16:[8,1],17:[4,0],18:[8,2],19:[8,0],20:[2,0]},GN=['integrated','entry-level','mid-range','high-end'];
+const fit=g=>{const p=S.pc,r=REQ[g.id];if(!p||!p.ram||p.gpu<0||!r)return null;if(p.ram<r[0]/2||p.gpu<r[1]-1)return 'no';return p.ram<r[0]||p.gpu<r[1]?'low':'ok'};
+const fitTag=g=>{const f=fit(g);return f?`<div class='fit ${f}'>${{ok:'Runs well',low:'Runs on low settings',no:'Won’t run well'}[f]}</div>`:''};
+const fitInfo=g=>{const r=REQ[g.id];return `${fitTag(g)}<div class='meta'>Needs about ${r[0]} GB RAM and ${GN[r[1]]} graphics${fit(g)?'':'. Set your PC on the Store page to check.'}</div>${g.live&&g.live.req?`<div class='meta'>Minimum: ${g.live.req}</div>`:''}`};
+const pcBar=()=>{const p=S.pc||{ram:0,gpu:-1};return `<div class='pc'><strong>Will it run on my PC?</strong><label>RAM <select data-pc='ram' aria-label='RAM'>${[0,4,8,16,32].map(n=>`<option value='${n}' ${p.ram==n?'selected':''}>${n?n+' GB':'Select'}</option>`).join('')}</select></label><label>Graphics <select data-pc='gpu' aria-label='Graphics'>${['Select','Integrated','Entry (GTX 1650)','Mid (RTX 3060)','High (RTX 4070+)'].map((t,i)=>`<option value='${i-1}' ${p.gpu==i-1?'selected':''}>${t}</option>`).join('')}</select></label><button class='chip' data-act='fit' aria-pressed='${S.fit}'>Only games that run</button></div>`};
+const liveHist=g=>{const x=g.live,d=new Date(x.lowDate).toLocaleDateString('en-IN',{month:'short',year:'numeric'});const good=x.nowUsd!=null&&x.nowUsd<=x.lowUsd*1.05;return `<div><div class='meta'>Live price (Steam India): <strong>${money(g.p)}</strong>${g.o>g.p?` · was ${money(g.o)}`:''}</div><div class='meta'>All-time low across stores: $${x.lowUsd.toFixed(2)} (${d})${x.nowUsd!=null?`, best price now: $${x.nowUsd.toFixed(2)}`:''}</div>${histChart(g)}${x.nowUsd==null?'':`<p style='margin:4px 0 0;font-weight:700'>${good?'Good time to buy. The best current price is close to the all-time low.':'Not at its lowest. Consider waiting for a sale.'}</p>`}</div>`};
+const hist=g=>{if(g.live&&g.live.lowUsd!=null&&g.o)return liveHist(g);if(!g.o)return `<div class='meta'>Free to play, so there’s no price history.</div>`;let s=g.id*9301+49297;const rnd=()=>(s=(s*9301+49297)%233280)/233280;const mo=['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'];const v=mo.map((_,i)=>i==11?g.p:Math.round(g.o*(rnd()<.35?1-(.15+rnd()*.45):1)));const lo=Math.min(...v),W=300,H=70,pts=v.map((y,i)=>[Math.round(i*W/11),Math.round(H-6-((y-lo*.9)/(g.o-lo*.9||1))*(H-12))]);const adv=g.p<=lo*1.03?'Good time to buy. This is at or near the lowest price in the last year.':`Lowest in the last year was ${money(lo)}. Waiting for a sale could save you ${money(g.p-lo)}.`;return `<div><div class='meta'>Price over the last 12 months (sample data)</div><svg viewBox='0 0 ${W} ${H}' width='100%' role='img' aria-label='Price history chart' style='display:block;overflow:visible'><polyline fill='none' stroke='var(--acc)' stroke-width='2' points='${pts.map(p=>p.join(',')).join(' ')}'/><circle cx='${pts[11][0]}' cy='${pts[11][1]}' r='4' fill='var(--acc)'/></svg><div class='meta' style='display:flex;justify-content:space-between'><span>${mo[0]}</span><span>${mo[11]}</span></div><p style='margin:4px 0 0;font-weight:700'>${adv}</p></div>`};
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.pc;if(!k)return;S.pc=S.pc||{ram:0,gpu:-1};S.pc[k]=+e.target.value;save();render()});
+const heart=g=>`<button class='heart' data-act='wish' data-id='${g.id}' aria-pressed='${S.wish.includes(g.id)}' aria-label='Wishlist ${g.t}'>${S.wish.includes(g.id)?'♥':'♡'}</button>`;
+const libBtn=g=>{const i=S.inst[g.id];if(i>=100)return `<button class='btn' data-act='play' data-id='${g.id}'>Play</button>`;if(i>=0)return `<div class='prog' role='progressbar' aria-valuenow='${i}'><i style='width:${i}%'></i></div><span class='meta'>${i}%</span>`;return `<button class='btn ghost' data-act='install' data-id='${g.id}'>Install</button>`};
+const card=g=>`<article class="card" data-act="detail" data-id="${g.id}" tabindex="0">${cover(g)}${heart(g)}<div class="body"><h3>${g.t}</h3><div class="meta">${g.g} · ★ ${g.r}</div>${fitTag(g)}<div class="buy"><span class="price ${g.p?"":"free"}">${g.o>g.p&&g.p?`<s>${money(g.o)}</s>`:""}${money(g.p)}</span>${btn(g)}</div></div></article>`;
+function list(){
+  let a=G.filter(x=>(S.genre=="All"||x.g==S.genre)&&x.t.toLowerCase().includes(S.q.toLowerCase())&&(!S.sale||(x.p>0&&x.o>x.p))&&(!S.fit||fit(x)!='no'));
+  if(S.mood)a=moodRank(a);if(S.sort=="low")a.sort((x,y)=>x.p-y.p);else if(S.sort=="high")a.sort((x,y)=>y.p-x.p);else if(S.sort=="rating")a.sort((x,y)=>y.r-x.r);
+  return a}
+function render(){
+  $("#nav").innerHTML=[["store","Store"],["free","Free games"],["wish","Wishlist ("+S.wish.length+")"],["lib","Library ("+S.lib.length+")"],["groups","Groups"],["acct",S.name||"Sign in"]].map(([k,l])=>`<button data-act="tab" data-id="${k}" ${S.tab==k?'aria-current="page"':""}>${l}</button>`).join("");
+  let h="";
+  if(S.tab=="store"){
+    const f=G[0];
+    if(!S.q)h+=`<div class="sale">Today’s deals end in <b id="cd"></b></div><section class="hero" data-act="detail" data-id="${f.id}">${cover(f)}<div class="txt"><h1>${f.t}</h1><p>${f.d}</p><div class="buy"><span class="price"><s>${money(f.o)}</s>${money(f.p)}</span>${btn(f)}</div></div></section>`;
+    const gs=["All",...new Set(G.map(x=>x.g))],a=list();
+    h+=moodBar()+pcBar()+`<div class="sec"><h2>Browse games</h2></div><div class="tools">${gs.map(x=>`<button class="chip" data-act="genre" data-id="${x}" aria-pressed="${S.genre==x}">${x}</button>`).join("")}<button class="chip" data-act="sale" aria-pressed="${!!S.sale}">On sale</button><select id="sort" aria-label="Sort games"><option value="featured">Featured</option><option value="rating">Top rated</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></div><div class="grid" style="margin-top:16px">${a.map(card).join("")||'<div class="empty">No games match. Try another search or genre.</div>'}</div>`;
+  }else if(S.tab=="free"){
+    const a=G.filter(x=>x.p===0&&x.t.toLowerCase().includes(S.q.toLowerCase()));
+    h+=`<div class="sec"><h2>Free games</h2><p>Add them to your library at no cost. They’re yours to keep.</p></div><div class="grid">${a.map(card).join("")||'<div class="empty">No free games match your search.</div>'}</div>`;
+  }else if(S.tab=="acct"){h+=acctView()}else if(S.tab=="groups"){h+=groupsView()}else if(S.tab=="wish"){
+    const a=S.wish.map(by);
+    h+=`<div class='sec'><h2>Wishlist</h2><p>Tap ♡ on any game to save it here.</p></div><div class='grid'>${a.map(card).join('')||'<div class="empty">Nothing saved yet. Tap ♡ on a game you like.</div>'}</div>`;
+  }else{
+    const a=S.lib.map(by).filter(Boolean);
+    h+=`<div class="sec"><h2>Your library</h2></div><div class="grid">${a.map(g=>`<article class="card">${cover(g)}<div class="body"><h3>${g.t}</h3><div class="meta">${g.g}</div><div class="buy">${libBtn(g)}</div></div></article>`).join("")||'<div class="empty">Your library is empty. Grab a free game to start.</div>'}</div>`;
+  }
+  $("#main").innerHTML=h;
+  const so=$("#sort");if(so){so.value=S.sort;so.onchange=e=>{S.sort=e.target.value;render()}}
+  $("#cnt").textContent=S.cart.length;
+  const it=S.cart.map(by);
+  $("#items").innerHTML=it.map(g=>`<div class="row">${cover(g).replace(/<span.*?<\/span>/,"")}<div class="t"><strong>${g.t}</strong><div class="meta">${money(g.p)}</div></div><button class="x" data-act="rm" data-id="${g.id}" aria-label="Remove ${g.t}">✕</button></div>`).join("")||'<div class="empty">Your cart is empty.</div>';
+  const tot=it.reduce((s,g)=>s+g.p,0);$("#tot").textContent=money(tot);$("#co").disabled=!it.length;if(S.modal)showModal(S.modal);tick();
+}
+const tick=()=>{const c=$('#cd');if(!c)return;const n=new Date(),e=new Date(n);e.setHours(24,0,0,0);const s=Math.floor((e-n)/1000);c.textContent=[s/3600|0,s/60%60|0,s%60].map(x=>String(x).padStart(2,'0')).join(':')};setInterval(tick,1000);
+function closeModal(){S.modal=0;const m=$('#modal');m.classList.remove('open');m.innerHTML=''}
+function showModal(id){const gg=by(id);if(gg.live&&gg.hist===undefined){gg.hist=null;api('/api/history/'+gg.id).then(a=>{gg.hist=a;if(S.modal==gg.id)showModal(gg.id)}).catch(()=>{})}const g=by(id),m=$('#modal'),was=m.classList.contains('open'),sim=G.filter(x=>x.g==g.g&&x.id!=g.id).slice(0,3),mine=S.my[g.id]||0;S.modal=g.id;m.innerHTML=`<div class='dlg' role='dialog' aria-modal='true' aria-label='${g.t}'><button class='x mx' data-act='mclose' aria-label='Close'>✕</button>${cover(g)}<div class='mb'><h2>${g.t}</h2><div class='meta'>${g.g} · ★ ${g.r} community rating</div><p style='margin:0'>${g.d}</p>${fitInfo(g)}${hist(g)}<div class='buy'><span class='price ${g.p?'':'free'}'>${g.o>g.p&&g.p?`<s>${money(g.o)}</s>`:''}${money(g.p)}</span><button class='btn ghost' style='margin-left:auto' data-act='wish' data-id='${g.id}'>${S.wish.includes(g.id)?'♥ Wishlisted':'♡ Wishlist'}</button>${btn(g)}</div><div><div class='meta'>Your rating</div><div class='stars'>${[1,2,3,4,5].map(n=>`<button data-act='rate' data-id='${g.id}' data-n='${n}' class='${mine>=n?'on':''}' aria-label='Rate ${n} stars'>★</button>`).join('')}</div></div>${sim.length?`<div><div class='meta'>More ${g.g} games</div><div class='similar'>${sim.map(x=>`<button class='chip' data-act='detail' data-id='${x.id}'>${x.t}</button>`).join('')}</div></div>`:''}</div></div>`;m.classList.add('open');if(!was)m.querySelector('.mx').focus()}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const api=(u,m,b)=>fetch(u,{method:m||'GET',headers:Object.assign({'content-type':'application/json'},S.tok?{authorization:'Bearer '+S.tok}:{}),body:b?JSON.stringify(b):undefined}).then(r=>r.json().then(j=>{if(!r.ok)throw new Error(j.error||r.status);return j}));
+const uni=(a,b)=>[...new Set([...(a||[]),...(b||[])])];
+const merge=st=>{st=st||{};S.cart=uni(S.cart,st.cart);S.lib=uni(S.lib,st.lib);S.wish=uni(S.wish,st.wish);save()};
+function auth(kind){api('/api/'+kind,'POST',{username:$('#u').value,password:$('#pw').value}).then(j=>{S.tok=j.token;S.name=j.name;try{localStorage.setItem('cp_tok',j.token)}catch(e){}merge(j.state);toast('Welcome, '+j.name);S.tab='store';render()}).catch(e=>toast(e.message))}
+function logout(){api('/api/logout','POST').catch(()=>{});S.tok=S.name=null;S.groups=[];try{localStorage.removeItem('cp_tok')}catch(e){}render()}
+function restore(){try{S.tok=localStorage.getItem('cp_tok')}catch(e){}if(S.tok)api('/api/me').then(j=>{S.name=j.name;merge(j.state);render()}).catch(()=>{S.tok=null})}
+function loadGroups(){api('/api/groups').then(g=>{S.groups=g;render()}).catch(()=>{})}
+function gcreate(){api('/api/groups','POST',{name:$('#gn').value}).then(()=>{toast('Group created');loadGroups()}).catch(e=>toast(e.message))}
+function gjoin(){api('/api/groups/join','POST',{code:$('#gc').value}).then(()=>{toast('Joined group');loadGroups()}).catch(e=>toast(e.message))}
+const acctView=()=>S.name?`<div class='sec'><h2>Account</h2></div><div class='pc'><span>Signed in as <strong>${esc(S.name)}</strong>. Your cart, library and wishlist sync across devices.</span><button class='btn ghost' style='margin-left:auto' data-act='logout'>Sign out</button></div>`:`<div class='sec'><h2>Sign in</h2><p>Saves your cart, library and wishlist to your account. Needs the backend running.</p></div><div class='pc'><label>Username <input id='u' autocomplete='username' maxlength='20'></label><label>Password <input id='pw' type='password' autocomplete='current-password'></label><button class='btn' style='margin-left:0' data-act='login'>Sign in</button><button class='btn ghost' style='margin-left:0' data-act='signup'>Create account</button></div>`;
+const groupsView=()=>{if(!S.name)return `<div class='empty'>Sign in to create or join a group.</div>`;const ctl=`<div class='pc'><label>New group <input id='gn' maxlength='30' placeholder='Hostel gang'></label><button class='btn' style='margin-left:0' data-act='gcreate'>Create</button><label>Join with code <input id='gc' maxlength='5' placeholder='AB12C'></label><button class='btn ghost' style='margin-left:0' data-act='gjoin'>Join</button></div>`;return `<div class='sec'><h2>Groups</h2><p>Shared wishlists and gift splitting.</p></div>${ctl}${S.groups.map(gr=>{const n=gr.members.length,cnt={};gr.members.forEach(m=>m.wish.forEach(id=>(cnt[id]=cnt[id]||[]).push(m.name)));const rows=Object.entries(cnt).map(([id,w])=>[by(id),w]).filter(x=>x[0]).sort((a,b)=>b[1].length-a[1].length).map(([g,w])=>`<div class='row' style='padding:6px 0;border-top:1px solid var(--line)'><div class='t'><strong>${g.t}</strong><div class='meta'>wished by ${w.map(esc).join(', ')}</div></div><div class='price'>${g.p?`${money(g.p)} \u00f7 ${n} = ${money(Math.ceil(g.p/n))} each`:'Free'}</div></div>`).join('');return `<div class='card' style='padding:14px;margin-bottom:14px'><h3>${esc(gr.name)} <span class='meta'>code ${esc(gr.code)} \u00b7 ${n} member${n>1?'s':''}: ${gr.members.map(m=>esc(m.name)).join(', ')}</span></h3>${rows||`<div class='meta' style='margin-top:8px'>No one has wishlisted anything yet.</div>`}</div>`}).join('')}`};
+const MOOD={1:'epic story hard fantasy long open-world dark',2:'story futuristic open-world long mature',3:'story fantasy long open-world epic',4:'story western open-world long calm mature',5:'fast hard replay stylish',6:'hard exploration atmospheric moody',7:'cozy relaxing farming calm long',8:'hard platformer short emotional story',9:'puzzle short funny co-op clever',10:'competitive multiplayer team hard long',11:'competitive multiplayer fast',12:'multiplayer fun friends',13:'competitive multiplayer fast fun friends',14:'competitive multiplayer fast',15:'co-op fast grind',16:'story anime exploration relaxing long',17:'funny party friends short multiplayer',18:'relaxing open-world fun',19:'thinking long calm',20:'sandbox creative explore co-op long'};
+const SYN={chill:'relaxing',peaceful:'calm',cosy:'cozy',coop:'co-op',quick:'short',difficult:'hard',challenging:'hard',farm:'farming',car:'racing',cars:'racing',shoot:'shooter',build:'sandbox',puzzles:'puzzle',scary:'horror'};
+const moodRank=a=>{const q=S.mood.toLowerCase().replace(/co op/g,'co-op'),re=/(?:no|without|not)\s+([a-z-]+)/g,neg=[...q.matchAll(re)].map(m=>SYN[m[1]]||m[1]),pos=(q.replace(re,' ').match(/[a-z-]+/g)||[]).map(w=>SYN[w]||w);return a.map(g=>{const t=((MOOD[g.id]||'')+' '+g.g.toLowerCase()).split(' ');let s=pos.filter(w=>t.includes(w)).length;if(pos.includes('free')&&g.p===0)s++;if(pos.includes('cheap')&&g.p<=500)s++;return[g,neg.some(w=>t.includes(w))?-1:s]}).filter(x=>x[1]>0).sort((x,y)=>y[1]-x[1]).map(x=>x[0])};
+const moodBar=()=>`<div class='pc'><strong>Mood search</strong><input id='mood' value='${esc(S.mood)}' placeholder='cozy, short, no multiplayer' style='flex:1;min-width:180px;border-radius:999px'><button class='btn' style='margin-left:0' data-act='mood'>Find games</button>${S.mood?`<button class='chip' data-act='moodclear'>Clear</button>`:''}</div>`;
+const histChart=g=>{const a=g.hist;if(!a||a.length<2)return `<div class='meta'>Price tracking has started. A real chart appears after a couple of days of data.</div>`;const ys=a.map(x=>x[1]),lo=Math.min(...ys),hi=Math.max(...ys),W=300,H=70,pts=a.map((x,i)=>[Math.round(i*W/(a.length-1)),Math.round(H-6-((x[1]-lo)/(hi-lo||1))*(H-12))]);return `<div><div class='meta'>Tracked price over ${a.length} days</div><svg viewBox='0 0 ${W} ${H}' width='100%' role='img' aria-label='Tracked price chart' style='display:block;overflow:visible'><polyline fill='none' stroke='var(--acc)' stroke-width='2' points='${pts.map(p=>p.join(',')).join(' ')}'/></svg><div class='meta' style='display:flex;justify-content:space-between'><span>${a[0][0]}</span><span>${a[a.length-1][0]}</span></div></div>`};
+document.addEventListener('keydown',e=>{if(e.target.id=='mood'&&e.key=='Enter'){S.mood=e.target.value.trim();render()}});
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),2200)}
+const cartEl=$("#cart");
+document.addEventListener("click",e=>{
+  if(e.target.id=='modal'){closeModal();return}if(e.target.closest("#cartbtn")){cartEl.classList.add("open");return}
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,id=b.dataset.id;
+  if(a=="tab"){S.tab=id;if(id=='groups')loadGroups()}
+  else if(a=="genre"){S.genre=id}
+  else if(a=="open"){cartEl.classList.add("open");return}
+  else if(a=="close"){cartEl.classList.remove("open");return}
+  else if(a=="add"){const g=by(id);if(g.p===0){S.lib.push(g.id);toast(g.t+" added to your library")}else{S.cart.push(g.id);toast(g.t+" added to cart")}}
+  else if(a=="rm"){S.cart=S.cart.filter(x=>x!=id)}
+  else if(a=="checkout"){S.lib.push(...S.cart);toast("Purchase complete. "+S.cart.length+" game(s) added to your library");S.cart=[];cartEl.classList.remove("open")}
+  else if(a=='wish'){const n=+id;if(S.wish.includes(n)){S.wish=S.wish.filter(x=>x!=n);toast('Removed from wishlist')}else{S.wish.push(n);toast('Saved to wishlist')}}else if(a=='login'||a=='signup'){auth(a);return}else if(a=='logout'){logout();return}else if(a=='gcreate'){gcreate();return}else if(a=='gjoin'){gjoin();return}else if(a=='mood'){S.mood=$('#mood').value.trim()}else if(a=='moodclear'){S.mood=''}else if(a=='detail'){showModal(id);return}else if(a=='mclose'){closeModal();return}else if(a=='sale'){S.sale=!S.sale}else if(a=='fit'){S.fit=!S.fit}else if(a=='rate'){S.my[id]=+b.dataset.n;toast('Thanks for rating '+by(id).t);showModal(id);return}else if(a=='install'){S.inst[id]=0;const iv=setInterval(()=>{S.inst[id]=S.inst[id]+4+Math.random()*6|0;if(S.inst[id]>=100){S.inst[id]=100;clearInterval(iv);toast(by(id).t+' is ready to play')}if(S.tab=='lib')render()},250)}else if(a=="play"){toast("Launching "+by(id).t+"…");return}
+  save();render()});
+$("#q").addEventListener("input",e=>{S.q=e.target.value;render()});
+document.addEventListener("keydown",e=>{if(e.key=="Escape"){cartEl.classList.remove("open");closeModal()}if(e.key=="Enter"&&e.target.matches&&e.target.matches(".card[data-act]"))showModal(e.target.dataset.id)});
+render();
+restore();fetch('/api/games').then(r=>r.ok?r.json():{}).then(m=>{let n=0;G.forEach(g=>{const x=m[g.id];if(!x||!Object.keys(x).length)return;n++;if(x.img)g.img=x.img;if(x.d)g.d=x.d;if(x.p!=null){g.p=x.p;g.o=Math.max(x.o,x.p)}if(x.ram&&REQ[g.id])REQ[g.id][0]=x.ram;g.live=x});if(n){render();toast('Live data loaded for '+n+' games')}}).catch(()=>{});
+</script>
+</body>
+</html>

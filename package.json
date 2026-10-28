@@ -1,0 +1,1 @@
+{"name":"crateplay","version":"1.0.0","description":"Game store demo with live Steam prices, accounts, groups and price tracking","scripts":{"start":"node server.js"},"engines":{"node":">=22.13"},"license":"MIT"}
